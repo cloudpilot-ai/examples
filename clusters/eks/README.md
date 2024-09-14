@@ -2,8 +2,6 @@
 
 See the [AWS documentation](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html) for additional details on Amazon EKS managed node groups.
 
-The different cluster configuration examples provided are separated per file and independent of the other cluster configurations.
-
 ### Prerequisites
 
 - [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)

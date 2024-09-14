@@ -4,7 +4,7 @@ This repository contains various demonstration manifests for CloudPilot AI.
 
 ## Demonstration Clusters
 
-- [EKS Managed Node Group](clusters/eks/README.md): Create a demonstration cluster with an EKS managed node group for showcasing CloudPilot AI optimization.
+- [EKS Managed Node Group](clusters/eks): Create a demonstration cluster with an EKS managed node group for showcasing CloudPilot AI optimization.
 
 ## License
 
