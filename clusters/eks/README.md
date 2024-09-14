@@ -18,8 +18,8 @@ aws configure
 To provision the provided configurations you need to execute:
 
 ```bash
-$ terraform init
-$ terraform apply --auto-approve
+terraform init
+terraform apply --auto-approve
 ```
 
 After finish the process, run the following command to get the `kubeconfig`:
