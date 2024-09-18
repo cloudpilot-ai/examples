@@ -15,8 +15,13 @@ aws configure
 
 ## Usage
 
-To provision the provided configurations you need to execute:
 
+Download the repository:
+```bash
+git clone https://github.com/cloudpilot-ai/examples.git
+cd examples/clusters/eks
+```
+Execute the following command to create the EKS cluster:
 ```bash
 terraform init
 terraform apply --auto-approve
