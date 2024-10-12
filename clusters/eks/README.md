@@ -15,7 +15,6 @@ aws configure
 
 ## Usage
 
-
 Download the repository:
 ```bash
 git clone https://github.com/cloudpilot-ai/examples.git
@@ -28,12 +27,12 @@ terraform apply --auto-approve
 ```
 
 After finish the process, run the following command to get the `kubeconfig`:
-```sh
+```bash
 export KUBECONFIG=~/.kube/demo
 aws eks update-kubeconfig --name cluster-demostration
 ```
 Then testing the cluster:
-```sh
+```bash
 kubectl get nodes
 ```
 
