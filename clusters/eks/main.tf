@@ -70,9 +70,15 @@ module "eks" {
     # uncomment this block to enable on-demand node group if you want to test the rebalance with on-demand nodes
     default_od_node_group = {
         name = "od-managed-node-group"
+
+        # amd64
+        instance_types = ["t3.xlarge"]
         ami_type       = "AL2_x86_64"
 
-        instance_types = ["t3.xlarge"]
+        # arm64
+        # instance_types = ["t4g.xlarge"]
+        # ami_type       = "AL2_ARM_64"
+
         min_size     = 1
         max_size     = 6
         desired_size = 2
