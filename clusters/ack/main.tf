@@ -80,5 +80,5 @@ resource "alicloud_cs_kubernetes_node_pool" "default" {     # 普通节点池。
   install_cloud_monitor = true           # 是否为Kubernetes的节点安装云监控。
   system_disk_category = "cloud_auto"
   system_disk_size     = 20
-  image_type = "AliyunLinux"
+  image_type = "ContainerOS"
 }
