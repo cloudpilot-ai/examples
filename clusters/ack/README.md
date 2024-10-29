@@ -44,7 +44,7 @@ terraform apply --auto-approve
 After finish the process, run the following command to get the `kubeconfig`:
 ```bash
 export KUBECONFIG=~/.kube/demo
-export CLUSTER_ID=$(aliyun cs GET /clusters | jq -r '.[] | select(.name == "cluster-demostration") | .cluster_id')
+export CLUSTER_ID=$(aliyun cs GET /clusters | jq -r '.[] | select(.name == "cluster-demonstration") | .cluster_id')
 aliyun cs GET /k8s/$CLUSTER_ID/user_config | jq -r '.config' > $KUBECONFIG
 ```
 
