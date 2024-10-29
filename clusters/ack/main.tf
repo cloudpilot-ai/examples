@@ -6,14 +6,14 @@ provider "alicloud" {
 resource "random_uuid" "this" {}
 # 默认资源名称。
 locals {
-  k8s_name                 = "cluster-demostration"
-  k8s_name_flannel         = "cluster-demostration-flannel"
+  k8s_name                 = "cluster-demonstration"
+  k8s_name_flannel         = "cluster-demonstration-flannel"
   new_vpc_name             = "vpc-172-16"
   new_vsw_name_azD         = "vswitch-azD-172-16-0"
   new_vsw_name_azE         = "vswitch-azE-172-16-2"
   new_vsw_name_azF         = "vswitch-azF-172-16-4"
   nodepool_name            = "default-nodepool"
-  log_project_name         = "log-for-cluster-demostration"
+  log_project_name         = "log-for-cluster-demonstration"
 }
 
 # 节点ECS实例配置。将查询满足CPU、Memory要求的ECS实例类型。
