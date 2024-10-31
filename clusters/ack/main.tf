@@ -6,14 +6,11 @@ provider "alicloud" {
 resource "random_uuid" "this" {}
 # 默认资源名称。
 locals {
-  k8s_name                 = "cluster-demonstration"
-  k8s_name_flannel         = "cluster-demonstration-flannel"
-  new_vpc_name             = "vpc-172-16"
-  new_vsw_name_azD         = "vswitch-azD-172-16-0"
-  new_vsw_name_azE         = "vswitch-azE-172-16-2"
-  new_vsw_name_azF         = "vswitch-azF-172-16-4"
+  k8s_name                 = var.CLUSTER_NAME
+  k8s_name_flannel         = "${var.CLUSTER_NAME}-flannel"
+  new_vpc_name             = "vpc-${var.CLUSTER_NAME}"
   nodepool_name            = "default-nodepool"
-  log_project_name         = "log-for-cluster-demonstration"
+  log_project_name         = "log-for-${var.CLUSTER_NAME}"
 }
 
 # 节点ECS实例配置。将查询满足CPU、Memory要求的ECS实例类型。
@@ -23,15 +20,18 @@ data "alicloud_instance_types" "default" {
   availability_zone    = var.availability_zone[0]
   kubernetes_node_role = "Worker"
 }
+
 # 满足实例规格的AZ。
 data "alicloud_zones" "default" {
   available_instance_type = data.alicloud_instance_types.default.instance_types[0].id
 }
+
 # 专有网络。
 resource "alicloud_vpc" "default" {
   vpc_name   = local.new_vpc_name
   cidr_block = "172.16.0.0/12"
 }
+
 # Node交换机。
 resource "alicloud_vswitch" "vswitches" {
   count      = length(var.node_vswitch_ids) > 0 ? 0 : length(var.node_vswitch_cidrs)
@@ -39,6 +39,7 @@ resource "alicloud_vswitch" "vswitches" {
   cidr_block = element(var.node_vswitch_cidrs, count.index)
   zone_id    = element(var.availability_zone, count.index)
 }
+
 # Pod交换机。
 resource "alicloud_vswitch" "terway_vswitches" {
   count      = length(var.terway_vswitch_ids) > 0 ? 0 : length(var.terway_vswitch_cidrs)
@@ -46,10 +47,11 @@ resource "alicloud_vswitch" "terway_vswitches" {
   cidr_block = element(var.terway_vswitch_cidrs, count.index)
   zone_id    = element(var.availability_zone, count.index)
 }
+
 # Kubernetes托管版。
 resource "alicloud_cs_managed_kubernetes" "default" {
   name               = local.k8s_name            # Kubernetes集群名称。
-  cluster_spec       = "ack.standard"           # 创建Pro版集群。
+  cluster_spec       = "ack.standard"           # 创建Std版集群。
   version            = "1.31.1-aliyun.1"
   worker_vswitch_ids = split(",", join(",", alicloud_vswitch.vswitches.*.id)) # 节点池所在的vSwitch。指定一个或多个vSwitch的ID，必须在availability_zone指定的区域中。
   pod_vswitch_ids    = split(",", join(",", alicloud_vswitch.terway_vswitches.*.id)) # Pod虚拟交换机。
@@ -67,18 +69,44 @@ resource "alicloud_cs_managed_kubernetes" "default" {
   }
 }
 
-resource "alicloud_cs_kubernetes_node_pool" "default" {     # 普通节点池。
+#Create a node pool with spot instance.
+resource "alicloud_cs_kubernetes_node_pool" "spot_instance" {
   cluster_id = alicloud_cs_managed_kubernetes.default.id     # Kubernetes集群名称。
-  node_pool_name = local.nodepool_name                       # 节点池名称。
+  node_pool_name = local.nodepool_name
   vswitch_ids = split(",", join(",", alicloud_vswitch.vswitches.*.id))  # 节点池所在的vSwitch。指定一个或多个vSwitch的ID，必须在availability_zone指定的区域中。
   instance_types       = var.worker_instance_types
-  instance_charge_type = "PostPaid"
+
   runtime_name    = "containerd"
   runtime_version = "1.6.20"
-  desired_size = 2                       # 节点池的期望节点数。
+  desired_size = 2
   password = var.password                # SSH登录集群节点的密码。
   install_cloud_monitor = true           # 是否为Kubernetes的节点安装云监控。
   system_disk_category = "cloud_auto"
   system_disk_size     = 20
   image_type = "ContainerOS"
+
+  # spot config
+  spot_strategy = "SpotWithPriceLimit"
+  spot_price_limit {
+    instance_type = var.worker_instance_types.0
+    # Different instance types have different price caps
+    price_limit = "1.00"
+  }
 }
+
+# Uncomment to create a node pool with on-demand instance.
+# resource "alicloud_cs_kubernetes_node_pool" "default" {     # 普通节点池。
+#   cluster_id = alicloud_cs_managed_kubernetes.default.id     # Kubernetes集群名称。
+#   node_pool_name = local.nodepool_name                       # 节点池名称。
+#   vswitch_ids = split(",", join(",", alicloud_vswitch.vswitches.*.id))  # 节点池所在的vSwitch。指定一个或多个vSwitch的ID，必须在availability_zone指定的区域中。
+#   instance_types       = var.worker_instance_types
+#   instance_charge_type = "PostPaid"
+#   runtime_name    = "containerd"
+#   runtime_version = "1.6.20"
+#   desired_size = 2                       # 节点池的期望节点数。
+#   password = var.password                # SSH登录集群节点的密码。
+#   install_cloud_monitor = true           # 是否为Kubernetes的节点安装云监控。
+#   system_disk_category = "cloud_auto"
+#   system_disk_size     = 20
+#   image_type = "ContainerOS"
+# }

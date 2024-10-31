@@ -37,14 +37,16 @@ cd examples/clusters/ack
 ```
 Execute the following command to create the ACK cluster:
 ```bash
+export TF_VAR_CLUSTER_NAME=<your_cluster_name>
 terraform init
 terraform apply --auto-approve
 ```
 
 After finish the process, run the following command to get the `kubeconfig`:
 ```bash
+export CLUSTER_NAME=<your_cluster_name>
 export KUBECONFIG=~/.kube/demo
-export CLUSTER_ID=$(aliyun cs GET /clusters | jq -r '.[] | select(.name == "cluster-demonstration") | .cluster_id')
+export CLUSTER_ID=$(aliyun cs GET /clusters | jq -r --arg CLUSTER_NAME "$CLUSTER_NAME" '.[] | select(.name == $CLUSTER_NAME) | .cluster_id')
 aliyun cs GET /k8s/$CLUSTER_ID/user_config | jq -r '.config' > $KUBECONFIG
 ```
 

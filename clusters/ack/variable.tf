@@ -1,3 +1,8 @@
+variable "CLUSTER_NAME" { # 指定集群的名称。
+  description = "The name of the cluster."
+  default     = "cluster-demonstration"
+}
+
 variable "availability_zone" {  # 指定虚拟交换机（vSwitches）的可用区。
   description = "The availability zones of vswitches."
   # 请跟下文main.tf配置文件中的地域保持一致。
