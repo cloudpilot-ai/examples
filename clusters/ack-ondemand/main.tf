@@ -69,44 +69,18 @@ resource "alicloud_cs_managed_kubernetes" "default" {
   }
 }
 
-#Create a node pool with spot instance.
-resource "alicloud_cs_kubernetes_node_pool" "spot_instance" {
+resource "alicloud_cs_kubernetes_node_pool" "default" {     # 普通节点池。
   cluster_id = alicloud_cs_managed_kubernetes.default.id     # Kubernetes集群名称。
-  node_pool_name = local.nodepool_name
+  node_pool_name = local.nodepool_name                       # 节点池名称。
   vswitch_ids = split(",", join(",", alicloud_vswitch.vswitches.*.id))  # 节点池所在的vSwitch。指定一个或多个vSwitch的ID，必须在availability_zone指定的区域中。
   instance_types       = var.worker_instance_types
-
+  instance_charge_type = "PostPaid"
   runtime_name    = "containerd"
   runtime_version = "1.6.20"
-  desired_size = 2
+  desired_size = 2                       # 节点池的期望节点数。
   password = var.password                # SSH登录集群节点的密码。
   install_cloud_monitor = true           # 是否为Kubernetes的节点安装云监控。
   system_disk_category = "cloud_auto"
   system_disk_size     = 20
   image_type = "ContainerOS"
-
-  # spot config
-  spot_strategy = "SpotWithPriceLimit"
-  spot_price_limit {
-    instance_type = var.worker_instance_types.0
-    # Different instance types have different price caps
-    price_limit = "1.00"
-  }
 }
-
-# Uncomment to create a node pool with on-demand instance.
-# resource "alicloud_cs_kubernetes_node_pool" "default" {     # 普通节点池。
-#   cluster_id = alicloud_cs_managed_kubernetes.default.id     # Kubernetes集群名称。
-#   node_pool_name = local.nodepool_name                       # 节点池名称。
-#   vswitch_ids = split(",", join(",", alicloud_vswitch.vswitches.*.id))  # 节点池所在的vSwitch。指定一个或多个vSwitch的ID，必须在availability_zone指定的区域中。
-#   instance_types       = var.worker_instance_types
-#   instance_charge_type = "PostPaid"
-#   runtime_name    = "containerd"
-#   runtime_version = "1.6.20"
-#   desired_size = 2                       # 节点池的期望节点数。
-#   password = var.password                # SSH登录集群节点的密码。
-#   install_cloud_monitor = true           # 是否为Kubernetes的节点安装云监控。
-#   system_disk_category = "cloud_auto"
-#   system_disk_size     = 20
-#   image_type = "ContainerOS"
-# }
