@@ -20,7 +20,7 @@ Download the repository:
 
 ```bash
 git clone https://github.com/cloudpilot-ai/examples.git
-cd examples/clusters/eks
+cd examples/clusters/eks-cn
 ```
 
 Execute the following command to create the EKS cluster:
