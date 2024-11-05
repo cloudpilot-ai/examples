@@ -33,7 +33,7 @@ export ALICLOUD_REGION="cn-shenzhen"
 The, download the repository:
 ```bash
 git clone https://github.com/cloudpilot-ai/examples.git
-cd examples/clusters/ack
+cd examples/clusters/ack-spot-terway
 ```
 Execute the following command to create the ACK cluster:
 ```bash
