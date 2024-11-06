@@ -8,7 +8,7 @@ data "aws_availability_zones" "available" {}
 locals {
   name            = "cluster-demonstration"
   cluster_version = "1.31"
-  region          = "us-east-2"
+  region          = "cn-northwest-1"
 
 
   vpc_cidr = "10.0.0.0/16"
@@ -87,7 +87,7 @@ module "eks" {
 
       # Needed by the aws-ebs-csi-driver
       iam_role_additional_policies = {
-        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+        AmazonEBSCSIDriverPolicy = "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
       }
     }
 
@@ -116,7 +116,7 @@ module "eks" {
 
       policy_associations = {
         single = {
-          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
+          policy_arn = "arn:aws-cn:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
           access_scope = {
             namespaces = ["default"]
             type       = "namespace"
@@ -132,14 +132,14 @@ module "eks" {
 
       policy_associations = {
         ex-one = {
-          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
+          policy_arn = "arn:aws-cn:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
           access_scope = {
             namespaces = ["default"]
             type       = "namespace"
           }
         }
         ex-two = {
-          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
+          policy_arn = "arn:aws-cn:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
           access_scope = {
             type = "cluster"
           }
@@ -209,7 +209,7 @@ module "ebs_kms_key" {
 
   key_service_roles_for_autoscaling = [
     # required for the ASG to manage encrypted volumes for nodes
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",
+    "arn:aws-cn:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",
     # required for the cluster / persistentvolume-controller to create encrypted PVCs
     module.eks.cluster_iam_role_arn,
   ]

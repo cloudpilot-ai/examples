@@ -67,8 +67,8 @@ module "eks" {
   control_plane_subnet_ids = module.vpc.intra_subnets
 
   eks_managed_node_groups = {
-    eks_ondemand = {
-      name = "eks-ondemand"
+    eks_spot = {
+      name = "eks-spot"
 
       # amd64
       instance_types = ["t3.xlarge"]
@@ -82,7 +82,7 @@ module "eks" {
       max_size     = 6
       desired_size = 2
 
-      capacity_type = "ON_DEMAND"
+      capacity_type = "SPOT"
       spot_max_price = "10"
 
       # Needed by the aws-ebs-csi-driver
