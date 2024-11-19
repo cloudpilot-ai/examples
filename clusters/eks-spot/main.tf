@@ -112,7 +112,7 @@ module "eks" {
     # One access entry with a policy associated
     ex-single-test = {
       kubernetes_groups = []
-      principal_arn     = aws_iam_role.this["single-test"].arn
+      principal_arn     = aws_iam_role.this["single-test-${local.region}-${local.name}"].arn
 
       policy_associations = {
         single = {
@@ -128,7 +128,7 @@ module "eks" {
     # Example of adding multiple policies to a single access entry
     ex-multiple-test = {
       kubernetes_groups = []
-      principal_arn     = aws_iam_role.this["multiple-test"].arn
+      principal_arn     = aws_iam_role.this["multiple-test-${local.region}-${local.name}"].arn
 
       policy_associations = {
         ex-one = {
@@ -261,7 +261,7 @@ data "aws_ami" "eks_default" {
 }
 
 resource "aws_iam_role" "this" {
-  for_each = toset(["single-test", "multiple-test"])
+  for_each = toset(["single-test-${local.region}-${local.name}", "multiple-test-${local.region}-${local.name}"])
 
   name = "ex-${each.key}"
 
