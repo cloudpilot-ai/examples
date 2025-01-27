@@ -58,10 +58,6 @@ variable "cluster_addons" {    # 指定ACK集群安装的组件。声明每个�
       "config" = "",
     },
     {
-      "name"   = "nginx-ingress-controller",
-      "config" = "{\"IngressSlbNetworkType\":\"internet\"}",
-    },
-    {
       "name"   = "ack-node-problem-detector",
       "config" = "{\"sls_project_name\":\"\"}",
     },
