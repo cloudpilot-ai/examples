@@ -7,7 +7,7 @@ data "aws_availability_zones" "available" {}
 
 locals {
   name            = "cluster-demonstration"
-  cluster_version = "1.31"
+  cluster_version = "1.32
   region          = "us-east-2"
 
 
