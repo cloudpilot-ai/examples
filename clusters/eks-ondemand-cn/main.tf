@@ -72,7 +72,7 @@ module "eks" {
 
       # amd64
       instance_types = ["t3.xlarge"]
-      ami_type       = "AL2_x86_64"
+      ami_type       = "AL2023_x86_64_STANDARD"
 
       # arm64
       # instance_types = ["t4g.xlarge"]
@@ -88,6 +88,10 @@ module "eks" {
       # Needed by the aws-ebs-csi-driver
       iam_role_additional_policies = {
         AmazonEBSCSIDriverPolicy = "arn:aws-cn:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      }
+
+      metadata_options = {
+        "http_put_response_hop_limit": 2
       }
     }
 
