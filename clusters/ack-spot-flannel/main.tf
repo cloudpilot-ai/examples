@@ -50,7 +50,7 @@ resource "alicloud_vswitch" "terway_vswitches" {
 resource "alicloud_cs_managed_kubernetes" "default" {
   name               = local.k8s_name            # Kubernetes集群名称。
   cluster_spec       = "ack.standard"           # 创建Std版集群。
-  version            = "1.31.1-aliyun.1"
+  version            = "1.33.1-aliyun.1"
   worker_vswitch_ids = split(",", join(",", alicloud_vswitch.vswitches.*.id)) # 节点池所在的vSwitch。指定一个或多个vSwitch的ID，必须在availability_zone指定的区域中。
   new_nat_gateway    = true               # 是否在创建Kubernetes集群时创建新的NAT网关。默认为true。
   pod_cidr           = "10.169.0.0/16"     # Pod网络的CIDR块。
