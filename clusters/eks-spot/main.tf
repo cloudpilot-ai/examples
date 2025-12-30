@@ -7,7 +7,7 @@ data "aws_availability_zones" "available" {}
 
 locals {
   name            = "cluster-demonstration"
-  cluster_version = "1.32"
+  cluster_version = "1.34"
   region          = "us-east-2"
 
 
@@ -231,16 +231,6 @@ resource "aws_iam_policy" "node_additional" {
   })
 
   tags = local.tags
-}
-
-data "aws_ami" "eks_default" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amazon-eks-node-${local.cluster_version}-v*"]
-  }
 }
 
 resource "aws_iam_role" "this" {
